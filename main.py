@@ -6,6 +6,7 @@ import logging
 import logging.config
 from config.config import Config, load_config
 from handlers import user, other
+from filters.filter import AdminFilter
 from aiogram import Bot, Dispatcher
 import asyncio
 
@@ -15,7 +16,7 @@ logger = logging.getLogger("logger")
 config: Config = load_config("./.env")
 bot = Bot(config.bot.token)
 dp = Dispatcher()
-dp.workflow_data.update({"admin_ids": config.bot.admin_ids})
+dp.message.filter(AdminFilter(config.bot.admin_ids))
 dp.include_routers(user.router, other.router)
 
 
